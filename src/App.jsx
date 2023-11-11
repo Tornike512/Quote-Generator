@@ -4,6 +4,27 @@ import axios from "axios";
 import { Background } from "./Components/Background/background";
 
 function App() {
+  const [quotes, setQuotes] = useState([]);
+  const [error, setError] = useState("");
+
+  async function getQuotes() {
+    try {
+      const response = await axios.get("https://api.quotable.io/quotes?limit=");
+      setQuotes(response.data.results);
+      console.log(response.data.results);
+    } catch (error) {
+      setError(error.message);
+    }
+  }
+
+  useEffect(() => {
+    getQuotes();
+  }, []);
+
+  if (error) {
+    return <h1>Something went wrong</h1>;
+  }
+
   return (
     <>
       <Background>
@@ -14,10 +35,13 @@ function App() {
           >
             Generate
           </button>
-          <p className="text-[30px]">
-            "Reflect on your present blessings, of which every man has many; not
-            on your past misfortunes, of which all men have some."
-          </p>
+          {quotes.map((quote) => {
+            return (
+              <p className="text-[30px]" key={quote.id}>
+                {quote.content}
+              </p>
+            );
+          })}
           <h1 className="mt-6"> -Charles Dickens</h1>
         </div>
       </Background>
