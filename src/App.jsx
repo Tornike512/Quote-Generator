@@ -46,7 +46,8 @@ function App() {
               setRandom(getRandomQuote(20));
               console.log("After setRandom:", random);
             }}
-            className="w-[62px] pl-9 pr-[5.25rem] py-3 rounded-lg border-0 bg-[#89cff0] shadow-[2px_1px_4px_#000000] absolute top-1/2 left-1/2 transform translate(-50%, -50%) "
+            className="w-[62px] pl-9 pr-[5.25rem] py-3 rounded-lg border-0 bg-[#89cff0] shadow-[2px_1px_4px_#000000]
+            absolute top-5 left-1/2 transform -translate-x-1/2 translate-y-[300%]"
           >
             Generate
           </button>
