@@ -4,16 +4,19 @@ import axios from "axios";
 import { Background } from "./Components/Background/background";
 
 function App() {
-  const [quotes, setQuotes] = useState([]);
+  const [quote, setQuote] = useState(null);
   const [error, setError] = useState("");
-  const [value, setValue] = useState(20);
+  const [random, setRandom] = useState(0);
 
   async function getQuotes() {
     try {
       const response = await axios.get(
-        `https://api.quotable.io/quotes?limit=${getRandomQuote(value)}`
+        `https://api.quotable.io/quotes?limit=20`
       );
-      setQuotes(response.data.results);
+
+      const randomIndex = getRandomQuote(response.data.results.length);
+      setQuote(response.data.results[randomIndex]);
+
       console.log(response.data.results);
     } catch (error) {
       setError(error.message);
@@ -22,10 +25,11 @@ function App() {
 
   useEffect(() => {
     getQuotes();
-  }, []);
+    console.log("Random value updated:", random);
+  }, [random]);
 
-  function getRandomQuote(value) {
-    return Math.floor(Math.random() * value);
+  function getRandomQuote(length) {
+    return Math.floor(Math.random() * length);
   }
 
   if (error) {
@@ -37,28 +41,22 @@ function App() {
       <Background>
         <div className="flex justify-center flex-col w-[600px] text-xl">
           <button
-            value={value}
-            onClick={() => getRandomQuote(20)}
+            onClick={() => {
+              console.log("Before setRandom:", random);
+              setRandom(getRandomQuote(20));
+              console.log("After setRandom:", random);
+            }}
             className="w-[62px] pl-9 pr-[5.25rem] py-3 rounded-lg border-[none]
            bg-[#89cff0] shadow-[2px_1px_4px_#000000]  absolute top-[10rem] left-[36.5rem]"
           >
             Generate
           </button>
-          {quotes.map((quote) => {
-            return (
-              <p className="text-[30px]" key={quote.id}>
-                {quote.content}
-              </p>
-            );
-          })}
-          {quotes.map((quote) => {
-            return (
-              <h1 key={quote.id} className="mt-6">
-                {" "}
-                {quote.author}
-              </h1>
-            );
-          })}
+          {quote && (
+            <div key={quote.id}>
+              <p className="text-[30px]">{quote.content}</p>
+              <h1 className="mt-6">{quote.author}</h1>
+            </div>
+          )}
         </div>
       </Background>
     </>
